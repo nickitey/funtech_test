@@ -24,3 +24,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         )
         return new_user
 
+
+class UserInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = (
+            "username",
+            "email",
+            "coins"
+        )
