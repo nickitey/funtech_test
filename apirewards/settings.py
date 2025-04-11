@@ -199,6 +199,15 @@ REDIS_HOST = config("REDIS_HOST")
 REDIS_PORT = 6380
 REDIS_USER = config("REDIS_USER")
 REDIS_PASSWORD = config("REDIS_PASSWORD")
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://{}:{}@{}:{}".format(
+            REDIS_USER, REDIS_PASSWORD, REDIS_HOST, REDIS_PORT),
+        "KEY_PREFIX": "rewards",
+    }
+}
+
 CELERY_BROKER_URL = "redis://{}:{}@{}:{}/0".format(
     REDIS_USER, REDIS_PASSWORD, REDIS_HOST, REDIS_PORT
 )
