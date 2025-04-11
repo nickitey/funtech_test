@@ -1,12 +1,14 @@
-from django.core.cache import cache
+from datetime import datetime, timedelta, timezone
 
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from django.core.cache import cache
 from rest_framework import status
-from .serializers import UserRegistrationSerializer, UserInfoSerializer, UserRewardsSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from .models import ScheduledReward
-from datetime import datetime, timezone, timedelta
+from .serializers import (UserInfoSerializer, UserRegistrationSerializer,
+                          UserRewardsSerializer)
 
 
 class UserRegistrationView(APIView):
@@ -17,11 +19,15 @@ class UserRegistrationView(APIView):
     Ручка будет отвечать на POST-запросы, будет доступна для всех (очевидно,
     для создания пользователя не нужна авторизация).
     """
+
     def post(self, request):
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({"message": "Пользователь создан"}, status=status.HTTP_201_CREATED)
+            return Response(
+                {"message": "Пользователь создан"},
+                status=status.HTTP_201_CREATED,
+            )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -37,11 +43,13 @@ class UserRewardsListView(APIView):
     """
     Класс-представление для получения пользователем списка его наград.
     """
+
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         serializer = UserRewardsSerializer(request.user)
         return Response(serializer.data)
+
 
 class UserRewardRequestView(APIView):
     """
@@ -57,6 +65,7 @@ class UserRewardRequestView(APIView):
     то награды не будет, если записи в кэше нет - то получит награду, а в кэш
     добавится на сутки запрет на добавление ему награды.
     """
+
     permission_classes = (IsAuthenticated,)
 
     def post(self, request):
@@ -69,15 +78,15 @@ class UserRewardRequestView(APIView):
                     "user": f"{user.username}",
                     "reward request status": "Not Allowed",
                     "description": "Вы уже запрашивали награду в течение "
-                    "последних суток."
+                    "последних суток.",
                 },
-                status=status.HTTP_403_FORBIDDEN
+                status=status.HTTP_403_FORBIDDEN,
             )
 
         ScheduledReward.objects.create(
             user=user,
             amount=5,
-            execute_at=datetime.now(tz=timezone.utc) + timedelta(minutes=5)
+            execute_at=datetime.now(tz=timezone.utc) + timedelta(minutes=5),
         )
         cache_timeout = 60 * 60 * 24
         cache.set(cache_key, True, cache_timeout)
@@ -86,7 +95,7 @@ class UserRewardRequestView(APIView):
                 "user": f"{user.username}",
                 "reward request status": "Success",
                 "description": "Награда запрошена и будет зачислена в течение "
-                               "пяти минут."
+                "пяти минут.",
             },
-            status=status.HTTP_202_ACCEPTED
+            status=status.HTTP_202_ACCEPTED,
         )

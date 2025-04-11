@@ -31,7 +31,7 @@ class ScheduledReward(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         verbose_name="Пользователь, запросивший награду",
-        related_name="scheduled_rewards"
+        related_name="scheduled_rewards",
     )
     amount = models.IntegerField(
         default=0, blank=True, verbose_name="Количество монет к начислению"
@@ -61,15 +61,14 @@ class ScheduledReward(models.Model):
         from .tasks import run_scheduled_reward_task
 
         run_scheduled_reward_task.apply_async(
-            args=(self.pk,),
-            eta=self.execute_at
+            args=(self.pk,), eta=self.execute_at
         )
 
-
-
     def __str__(self):
-        return (f"Награда пользователю {self.user} в размере {self.amount} "
-                f"монет, запланированная к выдаче {self.execute_at}")
+        return (
+            f"Награда пользователю {self.user} в размере {self.amount} "
+            f"монет, запланированная к выдаче {self.execute_at}"
+        )
 
 
 class RewardLog(models.Model):
@@ -78,7 +77,7 @@ class RewardLog(models.Model):
         null=True,
         on_delete=models.SET_NULL,
         verbose_name="Пользователь, получивший награду",
-        related_name='rewards'
+        related_name="rewards",
     )
     amount = models.IntegerField(
         default=0, blank=True, verbose_name="Количество начисленных монет"
@@ -92,5 +91,7 @@ class RewardLog(models.Model):
         verbose_name_plural = "Записи о присвоении награды"
 
     def __str__(self):
-        return (f"Награда пользователю {self.user} в размере {self.amount} "
-                f"монет, выданная {self.given_at}")
+        return (
+            f"Награда пользователю {self.user} в размере {self.amount} "
+            f"монет, выданная {self.given_at}"
+        )

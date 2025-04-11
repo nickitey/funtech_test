@@ -10,11 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
-
 from datetime import timedelta
-from decouple import config, Csv
 from pathlib import Path
 
+from decouple import Csv, config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config("SECRET_KEY")
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", cast=bool)
@@ -42,7 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     "rest_framework",
-    'corsheaders',
+    "corsheaders",
     "rest_framework_simplejwt.token_blacklist",
     # Далее в конфиге мы настроим simplejwt так, чтобы он по запросу на обновление
     # access_token возвращал вместе с новым токеном доступа еще и refresh_token.
@@ -54,7 +53,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -66,10 +65,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "apirewards.urls"
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000"
-]
+CORS_ALLOWED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000"]
 
 TEMPLATES = [
     {
@@ -99,8 +95,7 @@ DATABASES = {
         "NAME": config("POSTGRES_DB"),
         "PASSWORD": config("POSTGRES_PASSWORD"),
         "HOST": config("POSTGRESQL_HOST"),
-        # "PORT": config("POSTGRESQL_PORT"),
-        "PORT": 5434,
+        "PORT": config("POSTGRESQL_PORT"),
     }
 }
 
@@ -141,10 +136,10 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": [
         "rest_framework.renderers.JSONRenderer",
     ],
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
-    'DATETIME_FORMAT': "%Y-%m-%dT%H:%M:%S.%f+00:00",
+    "DATETIME_FORMAT": "%Y-%m-%dT%H:%M:%S.%f+00:00",
 }
 
 
@@ -190,20 +185,20 @@ SIMPLE_JWT = {
 
     "SLIDING_TOKEN_REFRESH_EXP_CLAIM": "refresh_exp",
     "SLIDING_TOKEN_LIFETIME": timedelta(minutes=5),
-    "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1)
+    "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
 }
 
 # Celery & Redis config
 REDIS_HOST = config("REDIS_HOST")
-# REDIS_PORT = config("REDIS_PORT")
-REDIS_PORT = 6380
+REDIS_PORT = config("REDIS_PORT")
 REDIS_USER = config("REDIS_USER")
 REDIS_PASSWORD = config("REDIS_PASSWORD")
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
         "LOCATION": "redis://{}:{}@{}:{}".format(
-            REDIS_USER, REDIS_PASSWORD, REDIS_HOST, REDIS_PORT),
+            REDIS_USER, REDIS_PASSWORD, REDIS_HOST, REDIS_PORT
+        ),
         "KEY_PREFIX": "rewards",
     }
 }
@@ -212,7 +207,9 @@ CELERY_BROKER_URL = "redis://{}:{}@{}:{}/0".format(
     REDIS_USER, REDIS_PASSWORD, REDIS_HOST, REDIS_PORT
 )
 CELERY_VISIBILITY_TIMEOUT = config("CELERY_VISIBILITY_TIMEOUT", cast=float)
-CELERY_BROKER_TRANSPORT_OPTIONS = {"visibility_timeout": CELERY_VISIBILITY_TIMEOUT}
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    "visibility_timeout": CELERY_VISIBILITY_TIMEOUT
+}
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 CELERY_ACCEPT_CONTENT = [config("CELERY_ACCEPT_CONTENT")]
