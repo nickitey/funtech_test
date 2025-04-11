@@ -43,7 +43,14 @@ INSTALLED_APPS = [
 
     "rest_framework",
     'corsheaders',
-    "rewards.apps.RewardsConfig"
+    "rest_framework_simplejwt.token_blacklist",
+    # Далее в конфиге мы настроим simplejwt так, чтобы он по запросу на обновление
+    # access_token возвращал вместе с новым токеном доступа еще и refresh_token.
+    # Авторы библиотеки реализовали это так, что старый refresh_token добавляется
+    # в черный список и более становится невалидным. Для реализации этого черного
+    # списка и используется приложение token_blacklist.
+    # Подробнее: https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html#blacklist-after-rotation
+    "rewards.apps.RewardsConfig",
 ]
 
 MIDDLEWARE = [
@@ -145,7 +152,7 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": True,
-    "BLACKLIST_AFTER_ROTATION": False,
+    "BLACKLIST_AFTER_ROTATION": True,
     "UPDATE_LAST_LOGIN": False,
 
     "ALGORITHM": "RS256",
