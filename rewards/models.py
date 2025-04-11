@@ -40,6 +40,10 @@ class ScheduledReward(models.Model):
         verbose_name="Планируемое время начисления награды"
     )
 
+    class Meta:
+        verbose_name = "Задание о присвоении награды"
+        verbose_name_plural = "Задания о присвоении награды"
+
     def schedule_reward(self):
         """
         Обычно все импорты находятся вверху модуля и выполняются при его
@@ -82,6 +86,10 @@ class RewardLog(models.Model):
     given_at = models.DateTimeField(
         auto_now_add=True, verbose_name="Фактическое время начисления награды"
     )
+
+    class Meta:
+        verbose_name = "Запись о присвоении награды"
+        verbose_name_plural = "Записи о присвоении награды"
 
     def __str__(self):
         return (f"Награда пользователю {self.user} в размере {self.amount} "
