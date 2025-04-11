@@ -1,4 +1,4 @@
-from django.urls import include, path
+from django.urls import path
 
 from .views import *  # Так делать нельзя и мы обязательно от этого избавимся.
                       # Позже.
