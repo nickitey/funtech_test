@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from .models import RewardLog
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -32,4 +33,23 @@ class UserInfoSerializer(serializers.ModelSerializer):
             "username",
             "email",
             "coins"
+        )
+
+
+class _RewardLogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RewardLog
+        fields = (
+            "amount",
+            "given_at"
+        )
+
+class UserRewardsSerializer(serializers.ModelSerializer):
+    rewards = _RewardLogSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = get_user_model()
+        fields = (
+            "username",
+            "rewards"
         )

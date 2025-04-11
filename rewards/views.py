@@ -2,7 +2,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import UserRegistrationSerializer, UserInfoSerializer
+from .serializers import UserRegistrationSerializer, UserInfoSerializer, UserRewardsSerializer
 
 
 class UserRegistrationView(APIView):
@@ -26,4 +26,15 @@ class UserInformationView(APIView):
 
     def get(self, request):
         serializer = UserInfoSerializer(request.user)
+        return Response(serializer.data)
+
+
+class UserRewardsListView(APIView):
+    """
+    Класс-представление для получения пользователем списка его наград.
+    """
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        serializer = UserRewardsSerializer(request.user)
         return Response(serializer.data)

@@ -31,6 +31,7 @@ class ScheduledReward(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         verbose_name="Пользователь, запросивший награду",
+        related_name="scheduled_rewards"
     )
     amount = models.IntegerField(
         default=0, blank=True, verbose_name="Количество монет к начислению"
@@ -73,6 +74,7 @@ class RewardLog(models.Model):
         null=True,
         on_delete=models.SET_NULL,
         verbose_name="Пользователь, получивший награду",
+        related_name='rewards'
     )
     amount = models.IntegerField(
         default=0, blank=True, verbose_name="Количество начисленных монет"
