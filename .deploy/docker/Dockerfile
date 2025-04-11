@@ -1,0 +1,38 @@
+FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+ARG USER_NAME=rewardsapp-user
+ARG USER_GROUP=rewards-app
+ARG USER_UID=1000
+ARG USER_GID=1000
+
+WORKDIR /app
+
+COPY requirements.txt ./
+
+RUN rm -rf /var/cache/apt && rm -rf /var/lib/apt/lists/* \
+    && apt-get update && apt-get install --no-install-recommends -y \
+    libpcre3=2:8.39-15 \
+    libpcre3-dev=2:8.39-15 \
+    libpq-dev=15.12-0+deb12u2 \
+    gcc=4:12.2.0-3 \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* \
+    && pip install --no-cache-dir --upgrade pip==25.0.1 \
+    && pip install --no-cache-dir -r requirements.txt \
+    && addgroup --system --gid $USER_GID $USER_GROUP \
+    && adduser --system --no-create-home $USER_NAME --uid $USER_UID --ingroup $USER_GROUP
+
+
+EXPOSE 8000
+
+COPY . .
+
+RUN chown -R $USER_NAME:$USER_GROUP /app \
+    && mv ./scripts/launch.sh /docker-entrypoint.sh \
+    && chmod +x /docker-entrypoint.sh
+
+USER $USER_NAME
+
+ENTRYPOINT [ "/docker-entrypoint.sh" ]
