@@ -97,6 +97,8 @@ DATABASES = {
         "PASSWORD": config("POSTGRES_PASSWORD"),
         "HOST": config("POSTGRESQL_HOST"),
         "PORT": config("POSTGRESQL_PORT"),
+        # "HOST": "localhost",
+        # "PORT": 5434
     }
 }
 
@@ -195,6 +197,7 @@ SIMPLE_JWT = {
 # Celery & Redis config
 REDIS_HOST = config("REDIS_HOST")
 REDIS_PORT = config("REDIS_PORT")
+# REDIS_PORT=6380
 REDIS_USER = config("REDIS_USER")
 REDIS_PASSWORD = config("REDIS_PASSWORD")
 CACHES = {
