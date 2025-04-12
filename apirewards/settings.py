@@ -64,6 +64,12 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+
+# Вообще так делать плохо, некоторые приложения (например, Postman) очень любят
+# терять тело запроса при переадресации с адресов без "висячего" слэша на полные
+# адреса и наоборот. Но камон, бесит же.
+APPEND_SLASH = True
+
 ROOT_URLCONF = "apirewards.urls"
 
 CORS_ALLOWED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000"]
