@@ -1,8 +1,7 @@
 from django.urls import path
 
-from .views import *  # Так делать нельзя и мы обязательно от этого избавимся.
-
-# Позже.
+from .views import (UserInformationView, UserRegistrationView,
+                    UserRewardsListView, UserRewardRequestView)
 
 
 urlpatterns = [

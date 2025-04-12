@@ -1,18 +1,23 @@
 from django.contrib import admin
 from django.urls import include, path
-from rest_framework_simplejwt.views import (TokenObtainPairView,
-                                            TokenRefreshView, TokenVerifyView)
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+
+from rewards.extensions import CustomTokenObtainPairView, CustomTokenRefreshView, CustomTokenVerifyView
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path(
-        "api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"
+        "api/token/", CustomTokenObtainPairView.as_view(), name="token_obtain_pair"
     ),
     path(
-        "api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"
+        "api/token/refresh/", CustomTokenRefreshView.as_view(), name="token_refresh"
     ),
-    path("api/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
+    path("api/token/verify/", CustomTokenVerifyView.as_view(), name="token_verify"),
     path("api/", include("rewards.urls")),
+    path('schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]
 
 

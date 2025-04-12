@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta, timezone
 
 from django.core.cache import cache
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -19,7 +20,11 @@ class UserRegistrationView(APIView):
     Ручка будет отвечать на POST-запросы, будет доступна для всех (очевидно,
     для создания пользователя не нужна авторизация).
     """
-
+    @extend_schema(
+    request=UserRegistrationSerializer,
+    responses={201: dict, 400: dict},
+    tags=["Rewards API"]
+    )
     def post(self, request):
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
@@ -34,6 +39,11 @@ class UserRegistrationView(APIView):
 class UserInformationView(APIView):
     permission_classes = (IsAuthenticated,)
 
+    @extend_schema(
+    request=UserInfoSerializer,
+    responses={200: UserInfoSerializer},
+    tags=["Rewards API"]
+    )
     def get(self, request):
         serializer = UserInfoSerializer(request.user)
         return Response(serializer.data)
@@ -46,6 +56,11 @@ class UserRewardsListView(APIView):
 
     permission_classes = (IsAuthenticated,)
 
+    @extend_schema(
+    request=UserRewardsSerializer,
+    responses={200: UserRewardsSerializer},
+    tags=["Rewards API"]
+    )
     def get(self, request):
         serializer = UserRewardsSerializer(request.user)
         return Response(serializer.data)
@@ -68,6 +83,10 @@ class UserRewardRequestView(APIView):
 
     permission_classes = (IsAuthenticated,)
 
+    @extend_schema(
+    responses={202: dict, 403: dict},
+    tags=["Rewards API"]
+    )
     def post(self, request):
         user = request.user
         cache_key = f"user_{user.pk}_requested_reward"

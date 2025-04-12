@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     # списка и используется приложение token_blacklist.
     # Подробнее: https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html#blacklist-after-rotation
     "rewards.apps.RewardsConfig",
+    "drf_spectacular"
 ]
 
 MIDDLEWARE = [
@@ -130,6 +131,8 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
+STATIC_ROOT = BASE_DIR / 'static'
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
@@ -140,6 +143,7 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DATETIME_FORMAT": "%Y-%m-%dT%H:%M:%S.%f+00:00",
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'
 }
 
 
@@ -215,3 +219,26 @@ CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 CELERY_ACCEPT_CONTENT = [config("CELERY_ACCEPT_CONTENT")]
 CELERY_TASK_SERIALIZER = config("CELERY_TASK_SERIALIZER")
 CELERY_RESULT_SERIALIZER = config("CELERY_RESULT_SERIALIZER")
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Тестовое задание для Funtech',
+    'DESCRIPTION': 'Система начисления наград пользователю',
+    'VERSION': '0.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SERVE_PERMISSIONS': ['rest_framework.permissions.AllowAny'],
+    'SERVE_AUTHENTICATION': None,
+    'SECURITY': [
+        {
+            'BearerAuth': [],
+        },
+    ],
+    'COMPONENTS': {
+        'SECURITY_SCHEMES': {
+            'BearerAuth': {
+                'type': 'http',
+                'scheme': 'bearer',
+                'bearerFormat': 'JWT',
+            },
+        },
+    }
+}
