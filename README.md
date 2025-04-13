@@ -8,7 +8,8 @@
 ![Docker-compose](https://img.shields.io/badge/Docker--compose-171515?style=flat-square&logo=Docker)
 ![Redis](https://img.shields.io/badge/Redis-171515?style=flat-square&logo=Redis)
 ![Celery](https://img.shields.io/badge/Celery-171515?style=flat-square&logo=Celery)
-![Pytest](https://img.shields.io/badge/Pytest-171515?style=flat-square&logo=Pytest)
+![Pytest](https://img.shields.io/badge/Pytest.%20Coverage-171515?style=flat-square&logo=Pytest)![](https://img.shields.io/badge/98%25-green?style=flat-square)
+
 
 
 
@@ -138,9 +139,21 @@ CSRF-защита реализована с помощью стандартно�
 
 По этой же причине код снабжен подробными комментариями[^1], которые разъясняют нюансы и детали реализации тех или иных компонентов приложения.
 
+#### Тестирование
+
 По условиям задачи не требовалось, в качестве инициативы автора код покрыт тестами с помощью pytest.
 
-Степень покрытия - ___ %.
+Для проведения тестов подготовлен отдельный набор контейнеров (приложение + тесты и Redis), запускаются они следующей командой:
+
+```bash
+     docker compose -f dc-test.yml up --abort-on-container-exit && docker compose -f dc-test.yml down -v
+```
+
+Тесты используют временную БД на основе SQLite3-файла, который существует только на период проведения тестов.
+
+После завершения тестов контейнеры остановятся автоматически и будут удалены.
+
+Степень покрытия - 98 %, отображается в терминале после завершения тестирования.
 
 
 #### Автор
