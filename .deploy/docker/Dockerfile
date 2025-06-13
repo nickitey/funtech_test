@@ -13,13 +13,13 @@ WORKDIR /app
 COPY requirements.txt ./
 
 RUN rm -rf /var/cache/apt && rm -rf /var/lib/apt/lists/* \
-    && apt-get update && apt-get install --no-install-recommends -y \
+    && apt update && apt install --no-install-recommends -y \
     libpcre3=2:8.39-15 \
     libpcre3-dev=2:8.39-15 \
-    libpq-dev=15.12-0+deb12u2 \
+    libpq-dev=15.13-0+deb12u1 \
     gcc=4:12.2.0-3 \
     && apt-get clean && rm -rf /var/lib/apt/lists/* \
-    && pip install --no-cache-dir --upgrade pip==25.0.1 \
+    && pip install --no-cache-dir --upgrade pip==25.1.1 \
     && pip install --no-cache-dir -r requirements.txt \
     && addgroup --system --gid $USER_GID $USER_GROUP \
     && adduser --system --no-create-home $USER_NAME --uid $USER_UID --ingroup $USER_GROUP
